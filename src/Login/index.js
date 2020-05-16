@@ -1,83 +1,75 @@
-import React, { useEffect, useState } from "react"
-import { 
-    Text, 
-    Dimensions, 
-    View, 
-    Image,
-    Button, 
-    Alert, 
-    ImageBackground,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity
-  } from "react-native"
-import { useForm, Controller } from "react-hook-form"
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { CommonActions } from '@react-navigation/native'
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  Dimensions,
+  View,
+  Image,
+  Button,
+  Alert,
+  ImageBackground,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import {useForm, Controller} from 'react-hook-form';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {CommonActions} from '@react-navigation/native';
 
-import bgImage from '../../assets/img/background.png'
-import logo from '../../assets/img/logo.png'
-import api from '../utils/api'
-import { login, getAccessToken } from '../utils/security'
+import bgImage from '../../assets/img/background.png';
+import logo from '../../assets/img/logo.png';
+import api from '../utils/api';
+import {login, getAccessToken} from '../utils/security';
 
-export default function Login({ navigation }) {
-
+export default function Login({navigation}) {
   const afterLogin = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 1,
-        routes: [
-          { name: 'Home' }
-        ],
-      })
+        routes: [{name: 'Home'}],
+      }),
     );
-  }
+  };
 
-  getAccessToken().then(
-    (token) => {
-      if (token) {
-        afterLogin()
-      }
+  getAccessToken().then(token => {
+    if (token) {
+      afterLogin();
     }
-  )  
+  });
 
-  const { control, handleSubmit, errors } = useForm()
-  const [ hiddenPass, setHiddenPass ] = useState(true)   
+  const {control, handleSubmit, errors} = useForm();
+  const [hiddenPass, setHiddenPass] = useState(true);
 
-  const onSubmit = async (values) => {
+  const onSubmit = async values => {
     try {
-      const { data } = await api.post('login', values);
-      if ( data.token ) {
+      const {data} = await api.post('login', values);
+      if (data.token) {
         await login(data.token);
-        afterLogin()
+        afterLogin();
       } else {
-        Alert.alert('Deu ruuim aqui')
+        Alert.alert('Deu ruuim aqui');
       }
     } catch (e) {
-      console.log(e)
-      Alert.alert('Deu erro mano')
+      console.log(e);
+      Alert.alert('Deu erro mano');
     }
-  }
+  };
 
   const hiddenPassHandler = () => {
-    setHiddenPass(!hiddenPass)
-  }
-    
+    setHiddenPass(!hiddenPass);
+  };
+
   return (
-    <ImageBackground 
-      source={bgImage}
-      style={styles.backgroundContainer}
-    >
+    <ImageBackground source={bgImage} style={styles.backgroundContainer}>
       <View style={styles.logoContainer}>
         <Image source={logo} style={styles.logo} />
         <Text style={styles.logoText}>React Native Boilerplate</Text>
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon 
-          name={"user"}
-          size={20} 
-          color={'rgba(255, 255, 255, 0.7)'} 
+        <Icon
+          name={'user'}
+          size={20}
+          color={'rgba(255, 255, 255, 0.7)'}
           style={styles.inputIcon}
         />
         <Controller
@@ -86,50 +78,48 @@ export default function Login({ navigation }) {
           control={control}
           name="email"
           onChange={args => args[0].nativeEvent.text}
-          rules={{ required: true }}
+          rules={{required: true}}
           defaultValue="user@one.com"
         />
         {errors.email && <Text>is required.</Text>}
-      </View>  
+      </View>
 
       <View style={styles.inputContainer}>
-        <Icon 
-          name={"key"}
-          size={20} 
-          color={'rgba(255, 255, 255, 0.7)'} 
+        <Icon
+          name={'key'}
+          size={20}
+          color={'rgba(255, 255, 255, 0.7)'}
           style={styles.inputIcon}
         />
-         <Controller
+        <Controller
           as={TextInput}
           style={styles.input}
           control={control}
           name="password"
           onChange={args => args[0].nativeEvent.text}
-          rules={{ required: true }}
+          rules={{required: true}}
           defaultValue="123456"
           secureTextEntry={hiddenPass}
         />
         <TouchableOpacity style={styles.btnEye} onPress={hiddenPassHandler}>
-          <Icon 
+          <Icon
             name={hiddenPass ? 'eye' : 'eye-slash'}
             size={20}
             color={'rgba(255, 255, 255, 0.7)'}
           />
         </TouchableOpacity>
-      </View>  
+      </View>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.btnLogin}
-        onPress={handleSubmit(onSubmit)}  
-      >
+        onPress={handleSubmit(onSubmit)}>
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>
-
     </ImageBackground>
   );
 }
 
-const { height: HEIGHT, width: WIDTH } = Dimensions.get('window')
+const {height: HEIGHT, width: WIDTH} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   backgroundContainer: {
@@ -137,25 +127,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: HEIGHT,
-    width: WIDTH
+    width: WIDTH,
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 50
+    marginBottom: 50,
   },
   logo: {
     width: 120,
-    height: 120
+    height: 120,
   },
   logoText: {
     color: 'white',
     fontSize: 20,
     fontWeight: '500',
     marginTop: 10,
-    opacity: 0.8
+    opacity: 0.8,
   },
   inputContainer: {
-    marginTop: 10
+    marginTop: 10,
   },
   input: {
     width: WIDTH - 55,
@@ -165,17 +155,17 @@ const styles = StyleSheet.create({
     paddingLeft: 45,
     backgroundColor: 'rgba(0, 0, 0, 0.35)',
     color: 'rgba(255, 255, 255, 0.7)',
-    marginHorizontal: 25
+    marginHorizontal: 25,
   },
   inputIcon: {
     position: 'absolute',
     top: 10,
-    left: 37
+    left: 37,
   },
   btnEye: {
     position: 'absolute',
     top: 10,
-    right: 37
+    right: 37,
   },
   btnLogin: {
     width: WIDTH - 55,
@@ -183,11 +173,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: '#432577',
     justifyContent: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
   text: {
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 16,
-    textAlign: 'center'
-  }
-})
+    textAlign: 'center',
+  },
+});
