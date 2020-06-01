@@ -1,16 +1,12 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, Button
+  View, Text, StyleSheet
 } from 'react-native'
-import { AuthContext } from '../context'
 
-export default function Dashboard() {
-  const { signOut } = React.useContext(AuthContext)
-
+export default function Product() {
   return (
     <View style={styles.root}>
-      <Text style={styles.text}>Dashboard SCREEN</Text>
-      <Button onPress={() => signOut()} title="Logout" />
+      <Text style={styles.text}>Product SCREEN</Text>
     </View>
   )
 }

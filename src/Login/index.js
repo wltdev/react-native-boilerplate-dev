@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react'
 import {
   Text,
   Dimensions,
@@ -10,53 +10,57 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-} from 'react-native';
-import {useForm, Controller} from 'react-hook-form';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {CommonActions} from '@react-navigation/native';
+} from 'react-native'
+import { useForm, Controller } from 'react-hook-form'
+import Icon from 'react-native-vector-icons/FontAwesome5'
+import { CommonActions } from '@react-navigation/native'
 
-import bgImage from '../../assets/img/background.png';
-import logo from '../../assets/img/logo.png';
-import api from '../utils/api';
-import {login, getAccessToken} from '../utils/security';
+import bgImage from '../../assets/img/background.png'
+import logo from '../../assets/img/logo.png'
+import api from '../utils/api'
+import { login, getAccessToken } from '../utils/security'
+import { AuthContext } from '../context'
 
-export default function Login({navigation}) {
+export default function Login({ navigation }) {
   const afterLogin = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 1,
-        routes: [{name: 'Home'}],
+        routes: [{ name: 'Home' }],
       }),
-    );
-  };
+    )
+  }
 
-  getAccessToken().then(token => {
+  getAccessToken().then((token) => {
     if (token) {
-      afterLogin();
+      afterLogin()
     }
-  });
+  })
 
-  const {control, handleSubmit, errors} = useForm();
-  const [hiddenPass, setHiddenPass] = useState(true);
+  const { control, handleSubmit, errors } = useForm()
+  const [hiddenPass, setHiddenPass] = useState(true)
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     try {
-      const {data} = await api.post('login', values);
+      const { data } = await api.post('login', values)
       if (data.token) {
-        await login(data.token);
-        afterLogin();
+        await login(data.token)
+        afterLogin()
       } else {
-        Alert.alert('Deu ruuim aqui');
+        Alert.alert('Deu ruuim aqui')
       }
     } catch (e) {
-      console.log(e);
-      Alert.alert('Deu erro mano');
+      // eslint-disable-next-line no-console
+      console.log(e)
+      Alert.alert('Deu erro mano')
     }
-  };
+  }
 
   const hiddenPassHandler = () => {
-    setHiddenPass(!hiddenPass);
-  };
+    setHiddenPass(!hiddenPass)
+  }
+
+  const { signIn } = React.useContext(AuthContext)
 
   return (
     <ImageBackground source={bgImage} style={styles.backgroundContainer}>
@@ -67,9 +71,9 @@ export default function Login({navigation}) {
 
       <View style={styles.inputContainer}>
         <Icon
-          name={'user'}
+          name="user"
           size={20}
-          color={'rgba(255, 255, 255, 0.7)'}
+          color="rgba(255, 255, 255, 0.7)"
           style={styles.inputIcon}
         />
         <Controller
@@ -77,8 +81,8 @@ export default function Login({navigation}) {
           style={styles.input}
           control={control}
           name="email"
-          onChange={args => args[0].nativeEvent.text}
-          rules={{required: true}}
+          onChange={(args) => args[0].nativeEvent.text}
+          rules={{ required: true }}
           defaultValue="user@one.com"
         />
         {errors.email && <Text>is required.</Text>}
@@ -86,9 +90,9 @@ export default function Login({navigation}) {
 
       <View style={styles.inputContainer}>
         <Icon
-          name={'key'}
+          name="key"
           size={20}
-          color={'rgba(255, 255, 255, 0.7)'}
+          color="rgba(255, 255, 255, 0.7)"
           style={styles.inputIcon}
         />
         <Controller
@@ -96,8 +100,8 @@ export default function Login({navigation}) {
           style={styles.input}
           control={control}
           name="password"
-          onChange={args => args[0].nativeEvent.text}
-          rules={{required: true}}
+          onChange={(args) => args[0].nativeEvent.text}
+          rules={{ required: true }}
           defaultValue="123456"
           secureTextEntry={hiddenPass}
         />
@@ -105,21 +109,23 @@ export default function Login({navigation}) {
           <Icon
             name={hiddenPass ? 'eye' : 'eye-slash'}
             size={20}
-            color={'rgba(255, 255, 255, 0.7)'}
+            color="rgba(255, 255, 255, 0.7)"
           />
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
         style={styles.btnLogin}
-        onPress={handleSubmit(onSubmit)}>
+        // onPress={handleSubmit(onSubmit)}
+        onPress={() => signIn()}
+      >
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>
     </ImageBackground>
-  );
+  )
 }
 
-const {height: HEIGHT, width: WIDTH} = Dimensions.get('window');
+const { height: HEIGHT, width: WIDTH } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   backgroundContainer: {
@@ -180,4 +186,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-});
+})

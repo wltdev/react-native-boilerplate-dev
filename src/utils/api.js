@@ -23,9 +23,11 @@ const fetch = () => {
   instance.interceptors.response.use(
     async response => response,
     async error => {
-      console.log(error);
-      const {status} = error.response;
+      if ( !error ) await logout()
+
+      const { status } = error.response;
       if (status && status === 401) await logout();
+
       return error;
     },
   );
