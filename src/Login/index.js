@@ -22,30 +22,17 @@ import { login, getAccessToken } from '../utils/security'
 import { AuthContext } from '../context'
 
 export default function Login({ navigation }) {
-  const afterLogin = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes: [{ name: 'Home' }],
-      }),
-    )
-  }
-
-  getAccessToken().then((token) => {
-    if (token) {
-      afterLogin()
-    }
-  })
 
   const { control, handleSubmit, errors } = useForm()
   const [hiddenPass, setHiddenPass] = useState(true)
+  const { signIn } = React.useContext(AuthContext)
 
   const onSubmit = async (values) => {
     try {
       const { data } = await api.post('login', values)
       if (data.token) {
         await login(data.token)
-        afterLogin()
+        signIn(data.token)
       } else {
         Alert.alert('Deu ruuim aqui')
       }
@@ -59,8 +46,6 @@ export default function Login({ navigation }) {
   const hiddenPassHandler = () => {
     setHiddenPass(!hiddenPass)
   }
-
-  const { signIn } = React.useContext(AuthContext)
 
   return (
     <ImageBackground source={bgImage} style={styles.backgroundContainer}>
@@ -116,8 +101,8 @@ export default function Login({ navigation }) {
 
       <TouchableOpacity
         style={styles.btnLogin}
-        // onPress={handleSubmit(onSubmit)}
-        onPress={() => signIn()}
+        onPress={handleSubmit(onSubmit)}
+        // onPress={() => signIn()}
       >
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>

@@ -3,9 +3,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-// import { getAccessToken } from './utils/security'
+import { getAccessToken } from './utils/security'
 import Login from './Login'
-// import Product from './Product'
 import Product from './Product'
 import Dashboard from './Dashboard'
 import Loading from './Loading'
@@ -44,9 +43,9 @@ export default function Routes() {
   const [userToken, setUserToken] = useState(null)
 
   const authContext = useMemo(() => ({
-    signIn: () => {
+    signIn: (token) => {
       setIsLoading(false)
-      setUserToken('token-hash')
+      setUserToken(token)
     },
     signUp: () => {
       setIsLoading(false)
@@ -58,9 +57,14 @@ export default function Routes() {
   }))
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
+    getAccessToken().then(
+      (token) => {
+        if (token) {
+          setUserToken(token)
+        }
+        setIsLoading(false)
+      }, () => setIsLoading(false)
+    )
   }, [])
 
   if (isLoading) {
