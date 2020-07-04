@@ -1,13 +1,12 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, Button
+  View, Text, StyleSheet
 } from 'react-native'
 
-export default function Product({ navigation }) {
+export default function Pelada() {
   return (
     <View style={styles.root}>
-      <Text style={styles.text}>Product SCREEN</Text>
-      <Button onPress={() => navigation.navigate('Pelada')} title="Logout" />
+      <Text style={styles.text}>Cadastro de Pelada</Text>
     </View>
   )
 }

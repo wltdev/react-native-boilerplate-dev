@@ -13,16 +13,14 @@ import {
 } from 'react-native'
 import { useForm, Controller } from 'react-hook-form'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { CommonActions } from '@react-navigation/native'
 
 import bgImage from '../../assets/img/background.png'
 import logo from '../../assets/img/logo.png'
 import api from '../utils/api'
-import { login, getAccessToken } from '../utils/security'
+import { login } from '../utils/security'
 import { AuthContext } from '../context'
 
-export default function Login({ navigation }) {
-
+export default function Login() {
   const { control, handleSubmit, errors } = useForm()
   const [hiddenPass, setHiddenPass] = useState(true)
   const { signIn } = React.useContext(AuthContext)
@@ -30,12 +28,13 @@ export default function Login({ navigation }) {
   const onSubmit = async (values) => {
     try {
       const { data } = await api.post('login', values)
-      if (data.token) {
-        await login(data.token)
-        signIn(data.token)
-      } else {
-        Alert.alert('Deu ruuim aqui')
-      }
+      console.log(data)
+      // if (data.token) {
+      //   await login(data)
+      //   signIn(data.token)
+      // } else {
+      //   Alert.alert('Deu ruuim aqui')
+      // }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e)
@@ -102,7 +101,7 @@ export default function Login({ navigation }) {
       <TouchableOpacity
         style={styles.btnLogin}
         onPress={handleSubmit(onSubmit)}
-        // onPress={() => signIn()}
+      // onPress={() => signIn()}
       >
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>

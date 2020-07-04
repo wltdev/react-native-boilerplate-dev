@@ -1,23 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  View, Text, StyleSheet, Button
+  View, Text, StyleSheet
 } from 'react-native'
 
-import { AuthContext } from '../context'
-import { logout } from '../utils/security'
+// import { AuthContext } from '../context'
+// import { logout } from '../utils/security'
+import userRealm from '../database/UserModel'
 
-export default function Dashboard() {
-  const { signOut } = React.useContext(AuthContext)
+export default function Dashboard({ navigation }) {
+  // const { signOut } = React.useContext(AuthContext)
 
-  const handlerLogout = async () => {
-    await logout()
-    signOut()
-  }
+  // const handlerLogout = async () => {
+  //   await logout()
+  //   signOut()
+  // }
+
+  // const [userAdmin]
+
+  // useEffect(() => {
+
+  // }, [])
 
   return (
     <View style={styles.root}>
-      <Text style={styles.text}>Dashboard SCREEN</Text>
-      <Button onPress={handlerLogout} title="Logout" />
+      <Text style={styles.text}>Home</Text>
     </View>
   )
 }
